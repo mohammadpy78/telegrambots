@@ -2,10 +2,14 @@ import telebot
 from telebot import apihelper
 import os
 import json
+import logging
 from datetime import datetime
 
 
 c = datetime.now()
+
+logger = telebot.logger
+telebot.logger.setLevel(logging.INFO)
 
 
 apihelper.ENABLE_MIDDLEWARE = True
@@ -17,6 +21,7 @@ bot = telebot.TeleBot(API_TOKEN)
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
+    logger.info('triggerd welcome')
     bot.reply_to(message, """\
 Hi there, I am pybot.
 I am here to echo your kind words back to you. Just say anything nice and I'll say the exact same thing to you!\
