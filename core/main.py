@@ -4,7 +4,7 @@ import os
 import json
 import logging
 from datetime import datetime
-from telebot import types
+from telebot.types import ReplyKeyboardMarkup,KeyboardButton
 
 c = datetime.now()
 
@@ -21,33 +21,22 @@ bot = telebot.TeleBot(API_TOKEN)
 
 
 # Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
     logger.info('triggerd welcome')
-    bot.reply_to(message, """\
-Hi there, I am pybot.
-I am here to echo your kind words back to you. Just say anything nice and I'll say the exact same thing to you!\
-""")
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(KeyboardButton('Help'),KeyboardButton('About'))
+    bot.send_message(message.chat.id,'Hi welcome to bot',reply_markup=markup)
 
-@bot.message_handler(commands=['setname'])
-def assignment(message):
-    bot.send_message(message.chat.id,'Hi whats your name?')
-    bot.register_next_step_handler(message,firstname)
+@bot.message_handler(func= lambda message:message.text=='About')
+def send_about(message):
+    about=message.text
+    bot.send_message(message.chat.id,'This is a bot for test ')
 
-
-def firstname(message,*args,**kwargs):
-    name =message.text
-    bot.send_message(message.chat.id,'Good!! tell me your last name')
-    bot.register_next_step_handler(message,lastnamee,name)
-
-def lastnamee(message,name):
-    lastname = message.text
-    bot.send_message(message.chat.id,f'welcome {name} {lastname} tell me your age')
-    bot.register_next_step_handler(message,age,lastname,name)
-
-def age(message,lastname,name):
-    agee = message.text
-    bot.send_message(message.chat.id,f'your name is {name} \n your lastname is {lastname} \n and your age is {agee}')
+@bot.message_handler(func=lambda message:message.text=='Help')
+def help(message):
+    helpp=message.text
+    bot.send_message(message.chat.id,'whats wrog for you?')
 
 
 
