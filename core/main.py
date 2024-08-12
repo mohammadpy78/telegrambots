@@ -24,19 +24,26 @@ bot = telebot.TeleBot(API_TOKEN)
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     logger.info('triggerd welcome')
-    markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(KeyboardButton('Help'),KeyboardButton('About'))
-    bot.send_message(message.chat.id,'Hi welcome to bot',reply_markup=markup)
-
-@bot.message_handler(func= lambda message:message.text=='About')
+    markup= ReplyKeyboardMarkup(resize_keyboard=True,input_field_placeholder='Choose your option: ')
+    markup.add(KeyboardButton(text='Help'),KeyboardButton(text='About'))
+    markup.add(KeyboardButton('test1'),KeyboardButton('test2'))
+    bot.send_message(message.chat.id,'this is test',reply_markup=markup)
+@bot.message_handler(func= lambda message:message.text =='About')
 def send_about(message):
-    about=message.text
-    bot.send_message(message.chat.id,'This is a bot for test ')
+    bot.send_message(message.chat.id,'this is bot for test')
 
-@bot.message_handler(func=lambda message:message.text=='Help')
-def help(message):
-    helpp=message.text
-    bot.send_message(message.chat.id,'whats wrog for you?')
+@bot.message_handler(func= lambda message:message.text =='Help')
+def send_about(message):
+    bot.send_message(message.chat.id,'whats wrong for you?')
+
+@bot.message_handler(func= lambda message:message.text=='test1')
+def send_test1(message):
+    bot.send_message(message.chat.id,'this is test1')
+
+@bot.message_handler(func= lambda message:message.text=='test2')
+def send_test2(message):
+    bot.send_message(message.chat.id,'this is test2')
+
 
 
 
