@@ -4,7 +4,7 @@ import os
 import json
 import logging
 from datetime import datetime
-from telebot.types import ReplyKeyboardMarkup,KeyboardButton
+from telebot.types import InlineKeyboardButton,InlineKeyboardMarkup
 
 c = datetime.now()
 
@@ -24,25 +24,21 @@ bot = telebot.TeleBot(API_TOKEN)
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     logger.info('triggerd welcome')
-    markup= ReplyKeyboardMarkup(resize_keyboard=True,input_field_placeholder='Choose your option: ')
-    markup.add(KeyboardButton(text='Help'),KeyboardButton(text='About'))
-    markup.add(KeyboardButton('test1'),KeyboardButton('test2'))
-    bot.send_message(message.chat.id,'this is test',reply_markup=markup)
-@bot.message_handler(func= lambda message:message.text =='About')
-def send_about(message):
-    bot.send_message(message.chat.id,'this is bot for test')
+    markup = InlineKeyboardMarkup()
+    button_google=InlineKeyboardButton(text='google',url='https://google.com')
+    button_youtube=InlineKeyboardButton(text='YouTube',url='https://youtube.com')
+    button_test=InlineKeyboardButton('test button',callback_data='test')
+    markup.add(button_google,button_youtube)
+    markup.add(button_test)
+    bot.send_message(message.chat.id,text='clicked the links',reply_markup=markup)
 
-@bot.message_handler(func= lambda message:message.text =='Help')
-def send_about(message):
-    bot.send_message(message.chat.id,'whats wrong for you?')
-
-@bot.message_handler(func= lambda message:message.text=='test1')
-def send_test1(message):
-    bot.send_message(message.chat.id,'this is test1')
-
-@bot.message_handler(func= lambda message:message.text=='test2')
-def send_test2(message):
-    bot.send_message(message.chat.id,'this is test2')
+@bot.callback_query_handler(func=lambda call:True)
+def send_data(call):
+    if call.data == 'test':
+        logger.info('send data test')
+        bot.answer_callback_query(call.id,text='clicked on button',show_alert=True)
+        
+   
 
 
 
